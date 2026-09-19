@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root {
+  --padding: 5px;
+  --primary: darkblue;
+  --thickness: 2px;
+}
+
 * {
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
@@ -9,4 +15,54 @@
 
 body {
   font-size: 17px;
+}
+
+.logo {
+  max-height: calc(20px + 1em);
+}
+
+.logo-link {
+  display: flex;
+}
+
+.no-login-bottom-bar {
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding);
+}
+
+.no-login-bottom-bar-link {
+  color: white;
+}
+
+.no-login-layout {
+  background: var(--primary);
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: auto;
+  width: 100%;
+}
+
+.no-login-top-bar {
+  display: flex;
+}
+
+.no-login-top-bar-link {
+  color: white;
+  display: flex;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.no-login-top-bar-controls {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.no-login-top-bar-logo-div {
+  align-items: center;
+  display: flex;
+  padding: 0px var(--padding);
 }
