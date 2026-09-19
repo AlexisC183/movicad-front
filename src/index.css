@@ -3,6 +3,7 @@
 :root {
   --padding: 5px;
   --primary: darkblue;
+  --radius: 6px;
   --thickness: 2px;
 }
 
@@ -15,6 +16,31 @@
 
 body {
   font-size: 17px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.centerer {
+    display: flex;
+    justify-content: center;
+}
+
+.dialog {
+  background: white;
+  padding: var(--padding);
+}
+
+.dialog-children {
+    margin-bottom: var(--padding);
+    margin-top: var(--padding);
+    max-height: 200px;
+    overflow: auto;
+}
+
+.flex {
+  display: flex;
 }
 
 .logo {
@@ -33,6 +59,12 @@ body {
 
 .no-login-bottom-bar-link {
   color: white;
+}
+
+.no-login-form {
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding);
 }
 
 .no-login-layout {
@@ -65,4 +97,36 @@ body {
   align-items: center;
   display: flex;
   padding: 0px var(--padding);
+}
+
+.primary-btn {
+    background: var(--primary);
+    border-color: var(--primary);
+    border-radius: var(--radius);
+    border-style: solid;
+    border-width: var(--thickness);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    font-size: 1em;
+    padding: var(--padding);
+}
+
+.secondary-round-btn {
+  background: white;
+  border-color: black;
+  border-radius: 100%;
+  border-style: solid;
+  border-width: var(--thickness);
+  cursor: pointer;
+  display: flex;
+  padding: var(--padding);
+}
+
+.ul {
+    margin-left: 1em;
+}
+
+.warning-color {
+    color: #8B8000;
 }
