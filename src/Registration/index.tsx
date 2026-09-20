@@ -1,10 +1,11 @@
 import type { ResJso } from '../types';
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+// import { Navigate, useNavigate } from 'react-router-dom';
 import { cases, conds } from 'cases-conds';
 import { QuestionMarkIcon } from '@phosphor-icons/react';
-import { Dialog, HSeparator, VSeparator } from '../components';
-import { constants, useFetch } from '../shared';
+import { HSeparator, VSeparator } from '../components';
+import DialogContext from '../DialogContext';
+import { constants, useFetch, value } from '../shared';
 
 type BlurValidation = { success: true } | { success: false, message: string };
 
@@ -65,7 +66,8 @@ const RegisterForm = () => {
   const [ formValues, setFormValues ] = useState({
     id: '',
     password: '',
-    password1: ''
+    password1: '',
+    role: 'estudiante'
   });
 
   // /!\ This state is for UI only, not for form submission /!\
@@ -75,12 +77,8 @@ const RegisterForm = () => {
     password1: { success: true }
   }); // Defaulting to non-warning messages
 
-  const [
-    dialogChildren,
-    setDialogChildren
-  ] = useState<React.ReactNode | undefined>(undefined);
-
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const showDialog = value(useContext(DialogContext));
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,18 +86,18 @@ const RegisterForm = () => {
     const idValidation = validators.id(formValues.id);
 
     if (!idValidation.success) {
-      setDialogChildren(idValidation.message);
+      showDialog(idValidation.message);
       return;
     }
     if (formValues.password !== formValues.password1) {
-      setDialogChildren('Las contraseñas no coinciden');
+      showDialog('Las contraseñas no coinciden');
       return;
     }
 
     const passwordValidation = validators.password(formValues.password);
 
     if (!passwordValidation.success) {
-      setDialogChildren(passwordValidation.message);
+      showDialog(passwordValidation.message);
       return;
     }
 
@@ -114,134 +112,80 @@ const RegisterForm = () => {
           case 'ok':
             //navigate('/topic/home');
             // TODO
+            showDialog('ok');
             break;
           case 'err':
-            setDialogChildren(jso.message);
+            showDialog(jso.message);
             break;
         }
       })
-      .catch(() => setDialogChildren(constants.NETWORK_ERROR));
+      .catch(() => showDialog(constants.NETWORK_ERROR));
   };
 
   return (
-    <>
+    <form
+      className='no-login-form'
+      onSubmit={ handleSubmit }
+    >
+      <div className='centerer'>
+        <span className='bold'>Unirse</span>
+      </div>
+      <VSeparator/>
       {
-        dialogChildren && (
-          <Dialog
-            classes={ {
-              bottomButton: 'primary-btn',
-              childrenDiv: 'dialog-children',
-              cornerButton: 'round-btn',
-              dialog: 'dialog'
-            } }
-            styles={ { cornerButtonIcon: { size: constants.FONT_SIZE } } }
-            onDismiss={ () => setDialogChildren(undefined) }
-          >
-            { dialogChildren }
-          </Dialog>
-        )
+        blurValidations.id.success
+        ?
+          <label htmlFor='id'>Introducir un identificador único:</label>
+        :
+          <label className='warning-color' htmlFor='id'>
+            { blurValidations.id.message }:
+          </label>
       }
-      <form
-        className='no-login-form'
-        inert={ !!dialogChildren }
-        onSubmit={ handleSubmit }
-      >
-        <div className='centerer'>
-          <span className='bold'>Unirse</span>
-        </div>
-        <VSeparator/>
-        {
-          blurValidations.id.success
-          ?
-            <label htmlFor='id'>Introducir un identificador único:</label>
-          :
-            <label className='warning-color' htmlFor='id'>
-              { blurValidations.id.message }:
-            </label>
-        }
-        <div className='flex'>
-          <input
-            id='id'
-            name='id'
-            className='text-field-growed'
-            type='text'
-            maxLength={ 50 }
-            minLength={ 1 }
-            required={ true }
-            autoFocus={ true }
-            onChange={ e => setFormValues(prev => {
-              return { ...prev, [e.target.name]: e.target.value };
-            }) }
-            onBlur={ e => setBlurValidations(prev => {
-              return {
-                ...prev,
-                id: validators.id(e.target.value)
-              };
-            }) }
-          />
-          <HSeparator/>
-          <button
-            className='round-btn'
-            type='button'
-            onClick={ () => setDialogChildren(
-              'Identificador de usuario para iniciar sesión. Solo letras sin acentos, sin eñes. Se permiten números y guiones bajos.'
-            ) }
-          >
-            <QuestionMarkIcon size={ constants.FONT_SIZE }/>
-          </button>
-        </div>
-        <VSeparator/>
-        {
-          blurValidations.password.success
-          ?
-            <label htmlFor='password'>Introducir contraseña:</label>
-          :
-            <label className='warning-color' htmlFor='password'>
-              { blurValidations.password.message }:
-            </label>
-        }
-        <div className='flex'>
-          <input
-            id='password'
-            name='password'
-            className='text-field-growed'
-            type='password'
-            minLength={ 8 }
-            maxLength={ 50 }
-            required={ true }
-            onChange={ e => setFormValues(prev => {
-              return { ...prev, [e.target.name]: e.target.value };
-            }) }
-            onBlur={ e => setBlurValidations(prev => {
-              return {
-                ...prev,
-                password: validators.password(e.target.value)
-              };
-            }) }
-          />
-          <HSeparator/>
-          <button
-            className='round-btn'
-            type='button'
-            onClick={ () => setDialogChildren(<PasswordHelp/>) }
-          >
-            <QuestionMarkIcon size={ constants.FONT_SIZE }/>
-          </button>
-        </div>
-        <VSeparator/>
-        {
-          blurValidations.password1.success
-          ?
-            <label htmlFor='password1'>Confirmar contraseña:</label>
-          :
-            <label className='warning-color' htmlFor='password1'>
-              { blurValidations.password1.message }:
-            </label>
-        }
+      <div className='field-btn-pair'>
         <input
-          id='password1'
-          name='password1'
-          className='text-field'
+          id='id'
+          name='id'
+          className='text-field-grown'
+          type='text'
+          maxLength={ 50 }
+          minLength={ 1 }
+          required={ true }
+          autoFocus={ true }
+          onChange={ e => setFormValues(prev => {
+            return { ...prev, [e.target.name]: e.target.value };
+          }) }
+          onBlur={ e => setBlurValidations(prev => {
+            return {
+              ...prev,
+              id: validators.id(e.target.value)
+            };
+          }) }
+        />
+        <HSeparator/>
+        <button
+          className='secondary-round-btn'
+          type='button'
+          onClick={ () => showDialog(
+            'Identificador de usuario para iniciar sesión. Solo letras sin acentos, sin eñes. Se permiten números y guiones bajos.'
+          ) }
+        >
+          <QuestionMarkIcon size={ constants.FONT_SIZE }/>
+        </button>
+      </div>
+      <VSeparator/>
+      {
+        blurValidations.password.success
+        ?
+          <label htmlFor='password'>Introducir contraseña:</label>
+        :
+          <label className='warning-color' htmlFor='password'>
+            { blurValidations.password.message }:
+          </label>
+      }
+      <div className='field-btn-pair'>
+        <input
+          id='password'
+          name='password'
+          className='text-field-grown'
           type='password'
           minLength={ 8 }
           maxLength={ 50 }
@@ -252,16 +196,91 @@ const RegisterForm = () => {
           onBlur={ e => setBlurValidations(prev => {
             return {
               ...prev,
-              password1: validators.password(e.target.value)
+              password: validators.password(e.target.value)
             };
           }) }
         />
-        <VSeparator/>
-        <div className='centerer'>
-          <button className='primary-btn'>Unirse</button>
-        </div>
-      </form>
-    </>
+        <HSeparator/>
+        <button
+          className='secondary-round-btn'
+          type='button'
+          onClick={ () => showDialog(<PasswordHelp/>) }
+        >
+          <QuestionMarkIcon size={ constants.FONT_SIZE }/>
+        </button>
+      </div>
+      <VSeparator/>
+      {
+        blurValidations.password1.success
+        ?
+          <label htmlFor='password1'>Confirmar contraseña:</label>
+        :
+          <label className='warning-color' htmlFor='password1'>
+            { blurValidations.password1.message }:
+          </label>
+      }
+      <input
+        id='password1'
+        name='password1'
+        className='text-field'
+        type='password'
+        minLength={ 8 }
+        maxLength={ 50 }
+        required={ true }
+        onChange={ e => setFormValues(prev => {
+          return { ...prev, [e.target.name]: e.target.value };
+        }) }
+        onBlur={ e => setBlurValidations(prev => {
+          return {
+            ...prev,
+            password1: validators.password(e.target.value)
+          };
+        }) }
+      />
+      <VSeparator/>
+      <span>Rol:</span>
+      <div className='flex'>
+        <input
+          id='student'
+          name='role'
+          className='radio'
+          type='radio'
+          value='estudiante'
+          onClick={ () => setFormValues(prev => {
+            return { ...prev, role: 'estudiante' }
+          }) }
+          checked={ formValues.role === 'estudiante' }
+        />
+        <label
+          className='radio-label'
+          htmlFor='student'
+        >
+          Estudiante
+        </label>
+        <HSeparator/>
+        <input
+          id='administrative'
+          name='role'
+          className='radio'
+          type='radio'
+          value='administrativo'
+          onClick={ () => setFormValues(prev => {
+            return { ...prev, role: 'administrativo' }
+          }) }
+          checked={ formValues.role === 'administrativo' }
+        />
+        <label
+          className='radio-label'
+          htmlFor='administrative'
+        >
+          Administrativo
+        </label>
+      </div>
+      <VSeparator/>
+      <div className='centerer'>
+        <button className='primary-btn'>Unirse</button>
+      </div>
+    </form>
   );
 };
 
@@ -288,7 +307,7 @@ const Register = () => {
   return cases(sessionStatus)
     .when(SessionStatus.LOADING, <span>Cargando...</span>)
     // .when(SessionStatus.LOGGED_IN, <Navigate to='/topic/home'/>)
-    .when(SessionStatus.LOGGED_IN, <></>) // TODO
+    .when(SessionStatus.LOGGED_IN, <span>logged in</span>) // TODO
     .otherwise(<RegisterForm/>);
 };
 

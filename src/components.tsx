@@ -96,7 +96,7 @@ const Dialog = ({
 const HSeparator = ({ size = 5 }) =>
   <div style={ { width: size } }/>
 
-const VSeparator = ({ size = 5 }) =>
+const VSeparator = ({ size = 10 }) =>
   <div style={ { height: size } }/>
 
 export {
