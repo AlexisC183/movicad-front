@@ -245,8 +245,7 @@ const RegisterForm = () => {
           name='role'
           className='radio'
           type='radio'
-          value='estudiante'
-          onClick={ () => setFormValues(prev => {
+          onChange={ () => setFormValues(prev => {
             return { ...prev, role: 'estudiante' }
           }) }
           checked={ formValues.role === 'estudiante' }
@@ -263,8 +262,7 @@ const RegisterForm = () => {
           name='role'
           className='radio'
           type='radio'
-          value='administrativo'
-          onClick={ () => setFormValues(prev => {
+          onChange={ () => setFormValues(prev => {
             return { ...prev, role: 'administrativo' }
           }) }
           checked={ formValues.role === 'administrativo' }
