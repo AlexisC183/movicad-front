@@ -112,6 +112,11 @@ body {
     padding: var(--padding);
 }
 
+.primary-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.25;
+}
+
 .radio {
   accent-color: var(--primary);
 }
