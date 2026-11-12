@@ -3,7 +3,7 @@
 react_dir=. # FIXME
 
 # Directory where to place the production React files.
-new_dir=../Movicad/wwwroot/ # FIXME
+new_dir=../Movicad0/dist/ # FIXME
 
 cd $react_dir
 npm run build

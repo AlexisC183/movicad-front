@@ -1,4 +1,4 @@
-import type { ResJso } from '../types';
+import type { IdRolePair, ResJso } from '../types';
 import { useState, useContext } from 'react';
 // import { Navigate, useNavigate } from 'react-router-dom';
 import { cases, conds } from 'cases-conds';
@@ -286,14 +286,14 @@ const Register = () => {
   const [ sessionStatus, setSessionStatus ] = useState(SessionStatus.LOADING);
   const api = constants.REMOTE + '/api/sessions/verify-session';
 
-  useFetch<ResJso<{ exists: boolean }>>(api)
+  useFetch<ResJso<{ idRolePair: IdRolePair | null }>>(api)
     .then(jso => {
       if (jso.status !== 'ok') {
         return;
       }
 
       setSessionStatus(
-        jso.data.exists
+        jso.data.idRolePair
         ?
           SessionStatus.LOGGED_IN
         :

@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router-dom';
 import DialogContext from './DialogContext';
 import { Dialog } from './components';
 import { constants } from './shared';
+import logo from '/logo.png';
 
 const Layout = () => {
   const [
@@ -34,7 +35,7 @@ const Layout = () => {
             <Link className='flex' to='/'>
               <img
                 className='logo'
-                src='https://lisp-lang.org/assets/img/logo/transparent.png'
+                src={ logo }
                 alt='Logo'
               />
             </Link>

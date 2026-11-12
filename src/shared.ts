@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 const constants = {
     FONT_SIZE: 17,
-    // REMOTE: 'http://localhost:5000', // Dev.
+    //REMOTE: 'http://localhost:5000', // Dev.
     REMOTE: '', // Prod.
     NETWORK_ERROR: 'No se pudo alcanzar al servidor'
 };
