@@ -2,7 +2,7 @@ import type { IdRolePair, ResJso } from '../types';
 import { useState, useContext } from 'react';
 // import { Navigate, useNavigate } from 'react-router-dom';
 import { cases } from 'cases-conds';
-import { VSeparator } from '../components';
+import VSeparator from '../components/VSeparator';
 import DialogContext from '../DialogContext';
 import { constants, useFetch, value } from '../shared';
 

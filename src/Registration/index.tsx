@@ -3,7 +3,8 @@ import { useState, useContext } from 'react';
 // import { Navigate, useNavigate } from 'react-router-dom';
 import { cases, conds } from 'cases-conds';
 import { QuestionMarkIcon } from '@phosphor-icons/react';
-import { HSeparator, VSeparator } from '../components';
+import HSeparator from '../components/HSeparator';
+import VSeparator from '../components/VSeparator';
 import DialogContext from '../DialogContext';
 import { constants, useFetch, value } from '../shared';
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import DialogContext from './DialogContext';
-import { Dialog } from './components';
+import Dialog from './components/Dialog';
 import { constants } from './shared';
 import logo from '/logo.png';
 
